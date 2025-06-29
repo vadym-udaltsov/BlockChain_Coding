@@ -11,6 +11,44 @@
 				"type": "constructor"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "walletAddress",
+						"type": "address"
+					}
+				],
+				"name": "GotMoney",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "walletAddress",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "birthday",
+						"type": "uint256"
+					}
+				],
+				"name": "NewGrandChild",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -139,6 +177,37 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "cursor",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					}
+				],
+				"name": "readGrandChildsArray",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"stateMutability": "payable",
 				"type": "receive"
 			}
@@ -171,11 +240,11 @@
 	},
 	"sources": {
 		"Granny.sol": {
-			"keccak256": "0xe544aa0c3f2856ab6b205bac1c0ebdff2dcce3db5dbcd9e7d4a768c198265084",
+			"keccak256": "0x6ba12bc4a9818b40787e38cd8cf33a0f9b59b3b2cf02aaa4a628454b541537c8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://60b0476d493979315f17be8ef13b0ce0c8cc4e4637dec089fd0bcda0b8a7b288",
-				"dweb:/ipfs/QmQ9xSdkBJLcFzyEWFcXMdfDSRqPyUeqZAxE9Sss4Hxuzy"
+				"bzz-raw://b2208546368c79ddfd5eba54c38940757dcb6eebe7967b38d31d76c2a2c82412",
+				"dweb:/ipfs/QmVSeQnt8PxPVLjKLQWSkgvNt2zCNj54e85dRapW4EWqiM"
 			]
 		}
 	},
