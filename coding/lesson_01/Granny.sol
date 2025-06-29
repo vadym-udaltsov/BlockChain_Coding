@@ -1,3 +1,4 @@
+//Provide here a license for other people
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.15;
@@ -45,7 +46,7 @@ contract Granny {
         emit NewGrandChild(walletAddress, name, birthday);
     }
 
-    // Хорошая практика использовать паттерн withdrawn ( требование ) вместо send ( отправка )
+    // It's a good practice to use 'withdrawn' ( demand ) instead of 'send' ( shipment )
     function withdraw() public {
         address payable walletAddress = payable(msg.sender);
         
