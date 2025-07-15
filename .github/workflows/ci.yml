@@ -48,27 +48,30 @@ jobs:
         with:
           name: coverage-report
           path: coverage
+      # Deploy Allure report to /allure (always overwrite old files)
       - name: Deploy Allure report to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
           destination_dir: allure
-          keep_files: true
+          keep_files: false
+      # Deploy coverage report to /coverage (always overwrite old files)
       - name: Deploy coverage report to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: coverage
           destination_dir: coverage
-          keep_files: true
+          keep_files: false
+      # Deploy index.html redirect to root (always overwrite)
       - name: Deploy index.html redirect to gh-pages root
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: .github/workflows
           destination_dir: .
-          keep_files: true
+          keep_files: false
       - name: Clean up temp files
         run: rm -rf allure/history allure-results/history || true
       - name: Add Allure Report link to summary
