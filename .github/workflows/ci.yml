@@ -30,29 +30,28 @@ jobs:
         run: npx hardhat coverage
         continue-on-error: true
 
-      - name: Generate Allure report
+      - name: Prepare Allure history (for Trend)
         run: |
-          npx allure generate allure-results --clean -o allure-report
-
-      - name: Prepare Allure history
-        run: |
-          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-          HISTORY_DIR="allure-history/run-$TIMESTAMP"
-          mkdir -p "$HISTORY_DIR"
-          cp -r allure-results/* "$HISTORY_DIR/"
-          # Keep only last 20 runs
           mkdir -p allure-history
-          ls -dt allure-history/run-* | tail -n +21 | xargs -r rm -rf
           # Copy last run's history for Allure trend
-          LAST_HISTORY=$(ls -dt allure-history/run-* | head -n 1)
-          if [ -d "$LAST_HISTORY/history" ]; then
+          LAST_HISTORY=$(ls -dt allure-history/run-*/history 2>/dev/null | head -n 1)
+          if [ -d "$LAST_HISTORY" ]; then
             mkdir -p allure-results/history
-            cp -r "$LAST_HISTORY/history/." allure-results/history/
+            cp -r "$LAST_HISTORY/." allure-results/history/
           fi
 
       - name: Generate Allure report
         run: |
           npx allure generate allure-results --clean -o allure-report
+
+      - name: Save Allure history for next run
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+          HISTORY_DIR="allure-history/run-$TIMESTAMP"
+          mkdir -p "$HISTORY_DIR"
+          cp -r allure-report/history "$HISTORY_DIR/"
+          # Keep only last 20 runs
+          ls -dt allure-history/run-* | tail -n +21 | xargs -r rm -rf
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
