@@ -35,10 +35,6 @@ jobs:
         run: |
           find allure-report -type f \( -name '*.json' -o -name '*.xml' \) -exec gzip -9 {} \;
           find allure-report -type f -name '*.gz' -exec bash -c 'mv "$0" "${0%.gz}"' {} \;
-      - name: Generate root index.html redirect
-        run: |
-          mkdir -p gh-pages-root
-          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=allure/" /><script>window.location.href = "allure/";</script><title>Redirecting...</title></head><body><p>Redirecting to <a href="allure/">Allure Report</a>...</p></body></html>' > gh-pages-root/index.html
       - name: Upload Allure report artifact
         uses: actions/upload-artifact@v4
         with:
