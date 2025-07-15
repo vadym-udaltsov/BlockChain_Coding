@@ -16,7 +16,7 @@ describe("Granny", function () {
   });
 
   it("should add a grandchild and increment counter", async function () {
-    const birthday = Math.floor(Date.now() / 1000) - 1000; // past timestamp
+    const birthday = Math.floor(Date.now() / 1000) - 1000;
     await expect(
       granny.addGrandChild(grandchild1.address, "Alice", birthday)
     )
@@ -53,15 +53,15 @@ describe("Granny", function () {
     ).to.be.revertedWith("Only owner can do this action.");
   });
 
-  it("should accept ETH and return correct balance", async function () {
+  it("should accept ETH and update bank and balance correctly", async function () {
     const value = ethers.parseEther("1");
     await owner.sendTransaction({ to: await granny.getAddress(), value });
 
-    const balance = await granny.balanceOf();
-    expect(balance).to.equal(value);
+    expect(await granny.balanceOf()).to.equal(value);
+    expect(await granny.bank()).to.equal(value);
   });
 
-  it("should allow grandchild to withdraw money", async function () {
+  it("should allow grandchild to withdraw money and emit event", async function () {
     const birthday = Math.floor(Date.now() / 1000) - 1000;
 
     await owner.sendTransaction({
@@ -107,15 +107,70 @@ describe("Granny", function () {
     const birthday = Math.floor(Date.now() / 1000) - 1000;
 
     for (let i = 0; i < 3; i++) {
-      const newWallet = ethers.Wallet.createRandom().connect(ethers.provider);
+      const wallet = ethers.Wallet.createRandom().connect(ethers.provider);
       await owner.sendTransaction({
-        to: newWallet.address,
+        to: wallet.address,
         value: ethers.parseEther("1"),
       });
-      await granny.addGrandChild(newWallet.address, `Child${i}`, birthday);
+      await granny.addGrandChild(wallet.address, `Child${i}`, birthday);
     }
 
     const page = await granny.readGrandChildsArray(0, 2);
     expect(page.length).to.equal(2);
+
+    const page2 = await granny.readGrandChildsArray(2, 5);
+    expect(page2.length).to.equal(1);
+
   });
+
+  it("should increment counter correctly when adding multiple grandchildren", async function () {
+    const birthday = Math.floor(Date.now() / 1000) - 1000;
+    await granny.addGrandChild(grandchild1.address, "Grandchild1", birthday);
+
+    const grandchild2 = ethers.Wallet.createRandom().connect(ethers.provider);
+    await owner.sendTransaction({
+      to: grandchild2.address,
+      value: ethers.parseEther("1"),
+    });
+    await granny.addGrandChild(grandchild2.address, "Grandchild2", birthday);
+
+    expect(await granny.counter()).to.equal(2);
+  });
+
+  it("should return empty array when cursor is beyond array length", async function () {
+    const birthday = Math.floor(Date.now() / 1000) - 1000;
+    await granny.addGrandChild(grandchild1.address, "ExtraChild", birthday);
+
+    const result = await granny.readGrandChildsArray(10, 5);
+    expect(result.length).to.equal(0);
+  });
+
+  it("should revert if ether transfer fails", async function () {
+    const birthday = Math.floor(Date.now() / 1000) - 1000;
+
+
+    const RejectEther = await ethers.getContractFactory("RejectEther");
+    const rejectEther = await RejectEther.deploy();
+    await rejectEther.waitForDeployment();
+
+
+    await granny.addGrandChild(await rejectEther.getAddress(), "Rejected", birthday);
+
+
+    const Attacker = await ethers.getContractFactory("Attacker");
+    const attacker = await Attacker.deploy(await granny.getAddress());
+    await attacker.waitForDeployment();
+
+
+    await granny.addGrandChild(await attacker.getAddress(), "Attacker", birthday);
+
+
+    await owner.sendTransaction({
+      to: await granny.getAddress(),
+      value: ethers.parseEther("1"),
+    });
+
+    await expect(attacker.attack()).to.be.revertedWith("Transfer failed");
+  });
+
 });

@@ -1,4 +1,3 @@
-//Provide here a license for other people
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.15;
@@ -32,15 +31,13 @@ contract Granny {
         address walletAddress,
         string memory name,
         uint256 birthday
-    ) public onlyOwner{
+    ) public onlyOwner {
         require(birthday > 0, "Something is wrong with the date of birth!");
         require(
             grandchilds[walletAddress].exist == false,
             "There is already such a grandchild!"
         );
-        grandchilds[walletAddress] = (
-            Grandchild(name, birthday, false, true)
-        );
+        grandchilds[walletAddress] = (Grandchild(name, birthday, false, true));
         arrGrandchilds.push(walletAddress);
         counter++;
         emit NewGrandChild(walletAddress, name, birthday);
@@ -49,9 +46,9 @@ contract Granny {
     // It's a good practice to use 'withdrawn' ( demand ) instead of 'send' ( shipment )
     function withdraw() public {
         address payable walletAddress = payable(msg.sender);
-        
+
         require(
-            grandchilds[walletAddress].exist == true, 
+            grandchilds[walletAddress].exist == true,
             "There is not such grandchild!"
         );
         require(
@@ -67,30 +64,39 @@ contract Granny {
         grandchilds[walletAddress].alreadyGotMoney = true;
 
         (bool success, ) = walletAddress.call{value: amount}("");
-        require(success);
+        require(success, "Transfer failed");
 
         emit GotMoney(walletAddress);
     }
 
-    function readGrandChildsArray(uint cursor, uint length) public view returns (address[] memory) {
-        address[] memory array = new address[](length);
-        uint counter2 = 0;
-        for (uint i = cursor; i < cursor + length; i++) {
-            array[counter2] = arrGrandchilds[i];
-            counter2++;
+    function readGrandChildsArray(
+        uint cursor,
+        uint length
+    ) public view returns (address[] memory) {
+        uint available = arrGrandchilds.length > cursor
+            ? arrGrandchilds.length - cursor
+            : 0;
+        uint actualLength = length < available ? length : available;
+
+        address[] memory array = new address[](actualLength);
+        for (uint i = 0; i < actualLength; i++) {
+            array[i] = arrGrandchilds[cursor + i];
         }
-         return array;
+        return array;
     }
 
     function balanceOf() public view returns (uint256) {
         return address(this).balance;
     }
 
-    receive() external payable { 
+    receive() external payable {
         bank += msg.value;
     }
 
-    event NewGrandChild(address indexed walletAddress, string name, uint256 birthday);
+    event NewGrandChild(
+        address indexed walletAddress,
+        string name,
+        uint256 birthday
+    );
     event GotMoney(address indexed walletAddress);
 }
-
