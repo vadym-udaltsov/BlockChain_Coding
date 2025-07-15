@@ -18,8 +18,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run tests with Allure
-        run: |
-          npx hardhat test --reporter mocha-allure-reporter --reporter-options resultsDir=allure-results
+        run: npx hardhat test
       - name: Generate Allure report
         run: |
           npx allure generate allure-results --clean -o allure-report
