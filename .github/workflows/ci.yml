@@ -48,15 +48,25 @@ jobs:
         with:
           name: coverage-report
           path: coverage
-      - name: Copy coverage to publish dir
-        run: |
-          mkdir -p allure-report/coverage
-          cp -r coverage/* allure-report/coverage/ || true
-      - name: Deploy Allure report (as root) and coverage to gh-pages
+      - name: Deploy Allure report to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
+          destination_dir: allure
+          keep_files: true
+      - name: Deploy coverage report to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: coverage
+          destination_dir: coverage
+          keep_files: true
+      - name: Deploy index.html redirect to gh-pages root
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
           destination_dir: .
           keep_files: true
       - name: Clean up temp files
