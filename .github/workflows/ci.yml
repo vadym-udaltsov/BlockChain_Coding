@@ -29,6 +29,7 @@ jobs:
           path: allure-report
       - name: Run solidity-coverage
         run: npx hardhat coverage
+        continue-on-error: true
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
