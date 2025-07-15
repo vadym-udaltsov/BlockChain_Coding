@@ -60,7 +60,7 @@ jobs:
           destination_dir: .
           keep_files: true
       - name: Clean up temp files
-        run: rm -rf gh-pages-root gh-pages-publish allure/history allure-results/history || true
+        run: rm -rf allure/history allure-results/history || true
       - name: Add Allure Report link to summary
         run: |
           echo "### 🧪 [Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/)" >> $GITHUB_STEP_SUMMARY
