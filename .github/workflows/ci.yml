@@ -29,6 +29,12 @@ jobs:
       - name: Generate Allure report
         run: |
           npx allure generate allure-results --clean -o allure-report
+      - name: Prune Allure history to last 20 runs
+        run: bash .github/workflows/prune_allure_history.sh
+      - name: Gzip Allure report JSON/XML files
+        run: |
+          find allure-report -type f \( -name '*.json' -o -name '*.xml' \) -exec gzip -9 {} \;
+          find allure-report -type f -name '*.gz' -exec bash -c 'mv "$0" "${0%.gz}"' {} \;
       - name: Generate root index.html redirect
         run: |
           mkdir -p gh-pages-root
@@ -47,29 +53,22 @@ jobs:
         with:
           name: coverage-report
           path: coverage
-      - name: Deploy Allure report to gh-pages
+      - name: Copy reports and index.html to publish dir
+        run: |
+          mkdir -p gh-pages-publish/allure
+          mkdir -p gh-pages-publish/coverage
+          cp -r allure-report/* gh-pages-publish/allure/ || true
+          cp -r coverage/* gh-pages-publish/coverage/ || true
+          cp gh-pages-root/index.html gh-pages-publish/index.html || true
+      - name: Deploy all reports and index.html to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
-          destination_dir: allure
-          keep_files: true
-      - name: Deploy coverage report to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: coverage
-          destination_dir: coverage
-          keep_files: true
-      - name: Deploy root index.html to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: gh-pages-root
+          publish_dir: gh-pages-publish
           destination_dir: .
           keep_files: true
       - name: Clean up temp files
-        run: rm -rf gh-pages-root allure/history allure-results/history || true
+        run: rm -rf gh-pages-root gh-pages-publish allure/history allure-results/history || true
       - name: Add Allure Report link to summary
         run: |
           echo "### 🧪 [Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/)" >> $GITHUB_STEP_SUMMARY
