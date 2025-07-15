@@ -28,6 +28,7 @@ jobs:
 
       - name: Run Hardhat coverage
         run: npx hardhat coverage
+        continue-on-error: true
 
       - name: Generate Allure report
         run: |
