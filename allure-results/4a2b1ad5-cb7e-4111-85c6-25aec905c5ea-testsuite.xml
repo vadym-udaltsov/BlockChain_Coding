@@ -1,0 +1,71 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1752607133728' stop='1752607133772'>
+    <name>MagicBeans</name>
+    <title>MagicBeans</title>
+    <test-cases>
+        <test-case start='1752607133735' status='passed' stop='1752607133737'>
+            <name>Contract should be successfully deployed, account0 is owner</name>
+            <title>Contract should be successfully deployed, account0 is owner</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133737' status='passed' stop='1752607133740'>
+            <name>Hamster№1 has no beans for sale yet</name>
+            <title>Hamster№1 has no beans for sale yet</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133740' status='passed' stop='1752607133746'>
+            <name>Hamster№1 should has 9.5 beans planted</name>
+            <title>Hamster№1 should has 9.5 beans planted</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133746' status='passed' stop='1752607133749'>
+            <name>Hamster№1 should has 9.5 beans for sale</name>
+            <title>Hamster№1 should has 9.5 beans for sale</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133749' status='passed' stop='1752607133758'>
+            <name>Hamster№2 should has 19 beans planted</name>
+            <title>Hamster№2 should has 19 beans planted</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133758' status='passed' stop='1752607133762'>
+            <name>Hamster№2 should make good money</name>
+            <title>Hamster№2 should make good money</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133762' status='passed' stop='1752607133765'>
+            <name>Hamster№1 late and didn't have time to withdraw money</name>
+            <title>Hamster№1 late and didn't have time to withdraw money</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133765' status='passed' stop='1752607133772'>
+            <name>Hamster№3 should has 9.5 beans planted</name>
+            <title>Hamster№3 should has 9.5 beans planted</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

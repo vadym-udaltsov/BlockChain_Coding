@@ -1,0 +1,124 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1752607133391' stop='1752607133726'>
+    <name>Granny</name>
+    <title>Granny</title>
+    <test-cases>
+        <test-case start='1752607133391' status='passed' stop='1752607133401'>
+            <name>should set the owner correctly</name>
+            <title>should set the owner correctly</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133401' status='passed' stop='1752607133423'>
+            <name>should add a grandchild and increment counter</name>
+            <title>should add a grandchild and increment counter</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133423' status='passed' stop='1752607133435'>
+            <name>should revert when birthday is 0</name>
+            <title>should revert when birthday is 0</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133436' status='passed' stop='1752607133453'>
+            <name>should revert when adding the same grandchild twice</name>
+            <title>should revert when adding the same grandchild twice</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133453' status='passed' stop='1752607133465'>
+            <name>should revert when non-owner tries to add grandchild</name>
+            <title>should revert when non-owner tries to add grandchild</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133465' status='passed' stop='1752607133476'>
+            <name>should accept ETH and update bank and balance correctly</name>
+            <title>should accept ETH and update bank and balance correctly</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133476' status='passed' stop='1752607133496'>
+            <name>should allow grandchild to withdraw money and emit event</name>
+            <title>should allow grandchild to withdraw money and emit event</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133496' status='passed' stop='1752607133506'>
+            <name>should revert if caller is not a grandchild</name>
+            <title>should revert if caller is not a grandchild</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133506' status='failed' stop='1752607133525'>
+            <name>should revert if birthday hasn't arrived</name>
+            <title>should revert if birthday hasn't arrived</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+            <failure>
+                <message>Expected transaction to be reverted with reason 'Birthday hasn't arrived yet!', but it didn't revert</message>
+                <stack-trace>AssertionError: Expected transaction to be reverted with reason 'Birthday hasn't arrived yet!', but it didn't revert
+                    at Context.&lt;anonymous> (test/granny.test.js:88:5)</stack-trace>
+            </failure>
+        </test-case>
+        <test-case start='1752607133525' status='passed' stop='1752607133545'>
+            <name>should revert if grandchild already withdrew</name>
+            <title>should revert if grandchild already withdrew</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133545' status='passed' stop='1752607133647'>
+            <name>should return paginated grandchild list</name>
+            <title>should return paginated grandchild list</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133648' status='passed' stop='1752607133676'>
+            <name>should increment counter correctly when adding multiple grandchildren</name>
+            <title>should increment counter correctly when adding multiple grandchildren</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133676' status='passed' stop='1752607133693'>
+            <name>should return empty array when cursor is beyond array length</name>
+            <title>should return empty array when cursor is beyond array length</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1752607133693' status='passed' stop='1752607133725'>
+            <name>should revert if ether transfer fails</name>
+            <title>should revert if ether transfer fails</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>
