@@ -38,8 +38,7 @@ jobs:
       - name: Generate root index.html redirect
         run: |
           mkdir -p gh-pages-root
-          node create-gh-pages-index.js
-          mv index.html gh-pages-root/index.html
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=allure/" /><script>window.location.href = "allure/";</script><title>Redirecting...</title></head><body><p>Redirecting to <a href="allure/">Allure Report</a>...</p></body></html>' > gh-pages-root/index.html
       - name: Upload Allure report artifact
         uses: actions/upload-artifact@v4
         with:
@@ -53,18 +52,15 @@ jobs:
         with:
           name: coverage-report
           path: coverage
-      - name: Copy reports and index.html to publish dir
+      - name: Copy coverage to publish dir
         run: |
-          mkdir -p gh-pages-publish/allure
-          mkdir -p gh-pages-publish/coverage
-          cp -r allure-report/* gh-pages-publish/allure/ || true
-          cp -r coverage/* gh-pages-publish/coverage/ || true
-          cp gh-pages-root/index.html gh-pages-publish/index.html || true
-      - name: Deploy all reports and index.html to gh-pages
+          mkdir -p allure-report/coverage
+          cp -r coverage/* allure-report/coverage/ || true
+      - name: Deploy Allure report (as root) and coverage to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: gh-pages-publish
+          publish_dir: allure-report
           destination_dir: .
           keep_files: true
       - name: Clean up temp files
