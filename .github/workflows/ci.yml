@@ -3,9 +3,9 @@ name: Hardhat Coverage & Allure Report
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main]
+    branches: [master]
   push:
-    branches: [main]
+    branches: [master]
   schedule:
     - cron: '0 6 * * *'
 
