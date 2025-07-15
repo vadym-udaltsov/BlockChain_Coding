@@ -1,79 +1,56 @@
-name: CI
+name: Hardhat Coverage & Allure Report
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [main]
   pull_request:
-    branches: [ master, main ]
+    branches: [main]
 
 jobs:
-  test:
+  test-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
+
       - name: Install dependencies
         run: npm ci
-      - name: Run tests with Allure
-        run: npx hardhat test
-        continue-on-error: true
-      - name: Download previous Allure history
-        run: |
-          git fetch origin gh-pages || true
-          git checkout origin/gh-pages -- allure/history || true
-          mkdir -p allure-results/history
-          cp -r allure/history/* allure-results/history/ || true
+
+      - name: Run Hardhat coverage
+        run: npx hardhat coverage
+
       - name: Generate Allure report
         run: |
           npx allure generate allure-results --clean -o allure-report
-      - name: Prune Allure history to last 20 runs
-        run: bash .github/workflows/prune_allure_history.sh
-      - name: Gzip Allure report JSON/XML files
+
+      - name: Prepare gh-pages content
         run: |
-          find allure-report -type f \( -name '*.json' -o -name '*.xml' \) -exec gzip -9 {} \;
-          find allure-report -type f -name '*.gz' -exec bash -c 'mv "$0" "${0%.gz}"' {} \;
-      - name: Upload Allure report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report
-      - name: Run solidity-coverage
-        run: npx hardhat coverage
-        continue-on-error: true
-      - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage
-      # Deploy Allure report to /allure (always overwrite old files)
-      - name: Deploy Allure report to gh-pages
+          TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+          RUN_DIR="reports/run-$TIMESTAMP"
+          mkdir -p "$RUN_DIR"
+          cp -r allure-report/* "$RUN_DIR/"
+          # Keep only the last 20 runs
+          mkdir -p reports
+          ls -dt reports/run-* | tail -n +21 | xargs -r rm -rf
+          # Generate index.html
+          echo '<html><head><title>Allure Reports History</title></head><body><h1>Last 20 runs</h1><ul>' > index.html
+          for d in $(ls -dt reports/run-* | head -n 20); do
+            DT=$(echo $d | sed 's/reports\/run-//')
+            echo "<li><a href='$d/index.html'>Run $DT</a></li>" >> index.html
+          done
+          echo '</ul></body></html>' >> index.html
+
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
-          destination_dir: allure
-          keep_files: false
-      # Deploy coverage report to /coverage (always overwrite old files)
-      - name: Deploy coverage report to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: coverage
-          destination_dir: coverage
-          keep_files: false
-      # Deploy index.html redirect to root (always overwrite)
-      - name: Deploy index.html redirect to gh-pages root
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .github/workflows
-          destination_dir: .
-          keep_files: false
-      - name: Clean up temp files
-        run: rm -rf allure/history allure-results/history || true
-      - name: Add Allure Report link to summary
-        run: |
-          echo "### 🧪 [Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/)" >> $GITHUB_STEP_SUMMARY
+          publish_dir: ./
+          publish_branch: gh-pages
+          keep_files: true
