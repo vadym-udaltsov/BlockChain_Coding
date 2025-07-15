@@ -1,5 +1,6 @@
 node_modules
-.env
+.github/workflows/copy_reports_to_publish_dir.js
+.github/workflows/_gh_pages_publish_placeholder.txt
 .idea
 
 # Hardhat files
