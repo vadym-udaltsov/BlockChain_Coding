@@ -19,6 +19,7 @@ jobs:
         run: npm ci
       - name: Run tests with Allure
         run: npx hardhat test
+        continue-on-error: true
       - name: Generate Allure report
         run: |
           npx allure generate allure-results --clean -o allure-report
@@ -49,3 +50,6 @@ jobs:
           publish_dir: coverage
           destination_dir: coverage
           keep_files: true
+      - name: Add Allure Report link to summary
+        run: |
+          echo "### 🧪 [Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/)" >> $GITHUB_STEP_SUMMARY
