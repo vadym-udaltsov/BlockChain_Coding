@@ -20,11 +20,20 @@ jobs:
       - name: Run tests with Allure
         run: npx hardhat test
         continue-on-error: true
+      - name: Download previous Allure history
+        run: |
+          git fetch origin gh-pages || true
+          git checkout origin/gh-pages -- allure/history || true
+          mkdir -p allure-results/history
+          cp -r allure/history/* allure-results/history/ || true
       - name: Generate Allure report
         run: |
           npx allure generate allure-results --clean -o allure-report
       - name: Generate root index.html redirect
-        run: node create-gh-pages-index.js
+        run: |
+          mkdir -p gh-pages-root
+          node create-gh-pages-index.js
+          mv index.html gh-pages-root/index.html
       - name: Upload Allure report artifact
         uses: actions/upload-artifact@v4
         with:
@@ -52,6 +61,15 @@ jobs:
           publish_dir: coverage
           destination_dir: coverage
           keep_files: true
+      - name: Deploy root index.html to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: gh-pages-root
+          destination_dir: .
+          keep_files: true
+      - name: Clean up temp files
+        run: rm -rf gh-pages-root allure/history allure-results/history || true
       - name: Add Allure Report link to summary
         run: |
           echo "### 🧪 [Allure Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure/)" >> $GITHUB_STEP_SUMMARY
